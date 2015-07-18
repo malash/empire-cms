@@ -1,0 +1,1 @@
+document.write("<option value=2>|-新聞中心</option><option value=34 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-國內新聞</option><option value=35 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-國際新聞</option><option value=36 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-娛樂新聞</option><option value=37 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-體育新聞</option>");

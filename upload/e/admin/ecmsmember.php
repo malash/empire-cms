@@ -1,0 +1,72 @@
+<?php
+define('EmpireCMSAdmin','1');
+require("../class/connect.php");
+require("../class/db_sql.php");
+require("../class/functions.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+//驗證用戶
+$lur=is_login();
+$logininid=$lur['userid'];
+$loginin=$lur['username'];
+$loginrnd=$lur['rnd'];
+$loginlevel=$lur['groupid'];
+$loginadminstyleid=$lur['adminstyleid'];
+hCheckEcmsRHash();
+require("../member/class/user.php");
+require("../class/memberfun.php");
+if($enews=='AddMemberF')//增加會員字段
+{
+	AddMemberF($_POST,$logininid,$loginin);
+}
+elseif($enews=='EditMemberF')//修改會員字段
+{
+	EditMemberF($_POST,$logininid,$loginin);
+}
+elseif($enews=='DelMemberF')//刪除會員字段
+{
+	DelMemberF($_GET,$logininid,$loginin);
+}
+elseif($enews=='EditMemberFOrder')//修改會員字段順序
+{
+	EditMemberFOrder($_POST['fid'],$_POST['myorder'],$logininid,$loginin);
+}
+elseif($enews=='AddMemberForm')//增加會員表單
+{
+	AddMemberForm($_POST,$logininid,$loginin);
+}
+elseif($enews=='EditMemberForm')//修改會員表單
+{
+	EditMemberForm($_POST,$logininid,$loginin);
+}
+elseif($enews=='DelMemberForm')//刪除會員表單
+{
+	DelMemberForm($_GET,$logininid,$loginin);
+}
+elseif($enews=="AddMemberGroup")//增加會員組
+{
+	$add=$_POST;
+	AddMemberGroup($add,$logininid,$loginin);
+}
+elseif($enews=="EditMemberGroup")//修改會員組
+{
+	$add=$_POST;
+	EditMemberGroup($add,$logininid,$loginin);
+}
+elseif($enews=="DelMemberGroup")//刪除會員組
+{
+	$groupid=$_GET['groupid'];
+	DelMemberGroup($groupid,$logininid,$loginin);
+}
+else
+{
+	printerror("ErrorUrl","history.go(-1)");
+}
+db_close();
+$empire=null;
+?>

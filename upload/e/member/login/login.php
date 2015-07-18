@@ -1,0 +1,19 @@
+<?php
+require('../../class/connect.php');
+require("../../class/db_sql.php");
+require('../../member/class/user.php');
+$link=db_connect();
+$empire=new mysqlquery();
+$editor=1;
+eCheckCloseMods('member');//Ãö³¬¼Ò¶ô
+if($ecms_config['member']['loginurl'])
+{
+	echo"<script>window.close();</script>";
+	//Header("Location:".$ecms_config['member']['loginurl']);
+	exit();
+}
+//¾É¤J¼ÒªO
+require(ECMS_PATH.'e/template/member/loginopen.php');
+db_close();
+$empire=null;
+?>

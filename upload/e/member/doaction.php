@@ -1,0 +1,181 @@
+<?php
+require('../class/connect.php');
+require('../class/db_sql.php');
+require('class/user.php');
+require('../data/dbcache/MemberLevel.php');
+require LoadLang('pub/fun.php');
+$link=db_connect();
+$empire=new mysqlquery();
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+eCheckCloseMods('member');//關閉模塊
+//綁定帳號
+$tobind=(int)$_POST['tobind'];
+if($tobind&&($enews=='login'||$enews=='register'))
+{
+	eCheckCloseMods('mconnect');//關閉模塊
+	eCheckCloseMemberConnect();//驗證開啟的接口
+	session_start();
+	include('../memberconnect/memberconnectfun.php');
+}
+if($enews=='login'||$enews=='exit')
+{
+	include('class/member_loginfun.php');
+}
+elseif($enews=='register')
+{
+	include('class/member_registerfun.php');
+	include('class/member_modfun.php');
+}
+elseif($enews=='EditSafeInfo'||$enews=='EditInfo')
+{
+	include('class/member_editinfofun.php');
+	include('class/member_modfun.php');
+}
+elseif($enews=='AddFava'||$enews=='DelFava_All'||$enews=='DelFava'||$enews=='AddFavaClass'||$enews=='EditFavaClass'||$enews=='DelFavaClass'||$enews=='MoveFava_All')
+{
+	include('../data/dbcache/class.php');
+	include('class/favfun.php');
+}
+elseif($enews=='AddMsg'||$enews=='DelMsg'||$enews=='DelMsg_all')
+{
+	include('class/msgfun.php');
+}
+elseif($enews=='AddFriend'||$enews=='EditFriend'||$enews=='DelFriend'||$enews=='AddFriendClass'||$enews=='EditFriendClass'||$enews=='DelFriendClass')
+{
+	include('class/friendfun.php');
+}
+elseif($enews=='CardGetFen')
+{
+	include('class/membercomfun.php');
+}
+elseif($enews=='SendPassword'||$enews=='DoGetPassword'||$enews=='DoActUser'||$enews=='RegSend')
+{
+	include('class/member_actfun.php');
+}
+
+if($enews=="login")//登陸
+{
+	qlogin($_POST);
+}
+elseif($enews=="exit")//退出登陸
+{
+	qloginout($myuserid,$myusername,$myrnd);
+}
+elseif($enews=="register")//註冊
+{
+	register($_POST);
+}
+elseif($enews=="EditSafeInfo")//修改安全信息
+{
+	EditSafeInfo($_POST);
+}
+elseif($enews=="EditInfo")//修改信息
+{
+	EditInfo($_POST);
+}
+elseif($enews=="AddFava")//增加收藏
+{
+	$cid=$_POST['cid'];
+	$id=$_POST['id'];
+	$classid=$_POST['classid'];
+	$from=$_POST['from'];
+	AddFava($id,$classid,$cid,$from);
+}
+elseif($enews=="DelFava_All")//刪除收藏
+{
+	$favaid=$_POST['favaid'];
+	DelFava_All($favaid);
+}
+elseif($enews=="DelFava")//刪除收藏
+{
+	$favaid=$_GET['favaid'];
+	DelFava($favaid);
+}
+elseif($enews=="CardGetFen")//點卡沖值
+{
+	$username=$_POST['username'];
+	$reusername=$_POST['reusername'];
+	$card_no=$_POST['card_no'];
+	$password=$_POST['password'];
+	CardGetFen($username,$reusername,$card_no,$password);
+}
+elseif($enews=="AddFavaClass")//增加收藏夾分類
+{
+	AddFavaClass($_POST);
+}
+elseif($enews=="EditFavaClass")//修改收藏夾分類
+{
+	EditFavaClass($_POST);
+}
+elseif($enews=="DelFavaClass")//刪除收藏夾分類
+{
+	$cid=$_GET['cid'];
+	DelFavaClass($cid);
+}
+elseif($enews=="MoveFava_All")//移動收藏夾
+{
+	$favaid=$_POST['favaid'];
+	$cid=$_POST['cid'];
+	MoveFava_All($favaid,$cid);
+}
+elseif($enews=="AddMsg")//發送短消息
+{
+	AddMsg($_POST);
+}
+elseif($enews=="DelMsg")//刪除短消息
+{
+	DelMsg($_GET['mid']);
+}
+elseif($enews=="DelMsg_all")//批量刪除短消息
+{
+	DelMsg_all($_POST['mid']);
+}
+elseif($enews=="AddFriend")//添加好友
+{
+	AddFriend($_POST);
+}
+elseif($enews=="EditFriend")//修改好友
+{
+	EditFriend($_POST);
+}
+elseif($enews=="DelFriend")//刪除好友
+{
+	DelFriend($_GET);
+}
+elseif($enews=="AddFriendClass")//添加好友分類
+{
+	AddFriendClass($_POST);
+}
+elseif($enews=="EditFriendClass")//修改好友分類
+{
+	EditFriendClass($_POST);
+}
+elseif($enews=="DelFriendClass")//刪除好友分類
+{
+	DelFriendClass($_GET['cid']);
+}
+elseif($enews=='SendPassword')//發送取回密碼郵件
+{
+	SendGetPasswordEmail($_POST);
+}
+elseif($enews=='DoGetPassword')//重設密碼
+{
+	DoGetPassword($_POST);
+}
+elseif($enews=='DoActUser')//激活帳號
+{
+	DoActUser($_GET);
+}
+elseif($enews=='RegSend')//重發激活郵件
+{
+	DoRegSend($_POST);
+}
+else
+{printerror("ErrorUrl","history.go(-1)",1);}
+db_close();
+$empire=null;
+?>

@@ -1,0 +1,227 @@
+<?php
+require('../class/connect.php');
+require('../class/q_functions.php');
+require('../class/db_sql.php');
+require('../data/dbcache/class.php');
+eCheckCloseMods('rss');//關閉模塊
+$link=db_connect();
+$empire=new mysqlquery();
+//參數設置
+$pagecode=$ecms_config['sets']['pagechar']?$ecms_config['sets']['pagechar']:'gb2312';
+
+//返回簡介字段名
+function ReturnTheIntroField($r){
+	global $public_r,$class_r,$emod_r,$tbname;
+	$mid=$class_r[$r[classid]]['modid'];
+	$smalltextf=$emod_r[$mid]['smalltextf'];
+	$stf=$emod_r[$mid]['savetxtf'];
+	$field='';
+	if($smalltextf&&$smalltextf<>',')
+	{
+		$smr=explode(',',$smalltextf);
+		$smcount=count($smr)-1;
+		for($i=1;$i<$smcount;$i++)
+		{
+			$smf=$smr[$i];
+			if($r[$smf])
+			{
+				$field=$smf;
+				break;
+			}
+		}
+	}
+	if(empty($field))
+	{
+		$field='newstext';
+	}
+	//存文本
+	if($stf==$field)
+	{
+		$field='';
+	}
+	return $field;
+}
+//替換
+function RepSpeRssStr($str){
+	$str=stripSlashes($str);
+	$str=ehtmlspecialchars($str,ENT_QUOTES);
+	$str=str_replace(array('[!--empirenews.page--]','[/!--empirenews.page--]','[',']'),array('','','',''),$str);
+	return $str;
+}
+
+//地址驗證
+if(!stristr($public_r['newsurl'],'://'))
+{
+	$public_r['newsurl']=eReturnDomain().$public_r['newsurl'];
+}
+$sitedomain=eReturnDomain();//網站域名
+
+$pagetitle=$public_r['sitename'];
+$pageurl=$public_r['newsurl'];
+$pageecms=1;
+$pageclassid=0;
+$tbname='';
+$add='';
+$yhid=0;
+$yhvar='qlist';
+//模型ID
+$mid=(int)$_GET['mid'];
+if($mid)
+{
+	$tbname=$emod_r[$mid]['tbname'];
+	if(empty($tbname))
+	{
+		exit();
+	}
+	$yhid=$etable_r[$tbname][yhid];
+}
+//欄目
+$trueclassid=0;
+$classid=$_GET['classid'];
+if($classid)
+{
+	$classid=RepPostVar($classid);
+	if(strstr($classid,','))//多欄目
+	{
+		$son_r=sys_ReturnMoreClass($classid,1);
+		$trueclassid=$son_r[0];
+		$add.=' and ('.$son_r[1].')';
+	}
+	else
+	{
+		$trueclassid=intval($classid);
+		if($class_r[$trueclassid][islast])//終極欄目
+		{
+			$add.=" and classid='$trueclassid'";
+		}
+		else
+		{
+			$add.=' and '.ReturnClass($class_r[$trueclassid][sonclass]);
+		}
+		//頁面標題
+		$pagetitle=$class_r[$trueclassid]['classname'];
+		$this_r['classid']=$trueclassid;
+		$pageurl=sys_ReturnBqClassname($this_r,9);
+		$pageecms=0;
+		$pageclassid=$trueclassid;
+	}
+	if(empty($class_r[$trueclassid]['tbname']))
+	{
+		exit();
+	}
+	if(empty($tbname))
+	{
+		$tbname=$class_r[$trueclassid][tbname];
+		$mid=$class_r[$trueclassid][modid];
+		$yhid=$class_r[$trueclassid][yhid];
+	}
+}
+//標題分類
+$truettid=0;
+$ttid=$_GET['ttid'];
+if($ttid)
+{
+	$ttid=RepPostVar($ttid);
+	if(strstr($ttid,','))//多標題分類
+	{
+		$son_r=sys_ReturnMoreTT($ttid);
+		$truettid=$son_r[0];
+		$add.=' and ('.$son_r[1].')';
+	}
+	else
+	{
+		$truettid=intval($ttid);
+		$add.=" and ttid='$truettid'";
+		if($pageecms==1)
+		{
+			$pagetitle=$class_tr[$truettid]['tname'];
+			$pageurl=sys_ReturnBqInfoTypeUrl($truettid);
+			$pageclassid=$truettid;
+		}
+	}
+	$ttmid=$class_tr[$truettid]['mid'];
+	if(empty($ttmid))
+	{
+		printerror('ErrorUrl','',1);
+	}
+	if(empty($tbname))
+	{
+		$tbname=$emod_r[$ttmid]['tbname'];
+		$mid=$ttmid;
+		$yhid=$class_tr[$truettid][yhid];
+	}
+}
+//默認表
+if(empty($tbname))
+{
+	$tbname=$public_r['tbname'];
+	$mid=$etable_r[$tbname][mid];
+	$yhid=$etable_r[$tbname][yhid];
+}
+if(empty($tbname)||InfoIsInTable($tbname))
+{
+	printerror('ErrorUrl','',1);
+}
+//排序
+$order=(int)$_GET['order'];
+if($order==1)//按ID
+{
+	$myorder="id";
+}
+elseif($order==2)//評論數
+{
+	$myorder="plnum";
+}
+elseif($order==3)//點擊數
+{
+	$myorder="onclick";
+}
+elseif($order==4)//下載數
+{
+	$myorder="totaldown";
+}
+else//發佈時間
+{
+	$myorder="newstime";
+}
+//顯示順序
+$orderby=(int)$_GET['orderby'];
+if($orderby)
+{
+	$myorderby="ASC";
+}
+else
+{
+	$myorderby="DESC";
+}
+//優化
+$yhadd='';
+if($yhid)
+{
+	$yhadd=ReturnYhSql($yhid,$yhvar);
+}
+$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$tbname.ReturnYhAndSql($yhadd,$add,1)." order by ".$myorder." ".$myorderby." limit ".$public_r['rssnum'];
+$sublen=$public_r['rsssub'];
+$sql=$empire->query($query);
+//顯示文件
+$type=$_GET['type'];
+if($type=="xml")//xml
+{
+	$webfilename="xml.php";
+}
+elseif($type=="atom")//atom
+{
+	$webfilename="atom.php";
+}
+elseif($type=="rss1")//rss1
+{
+	$webfilename="rss10.php";
+}
+else//rss2
+{
+	$webfilename="rss20.php";
+}
+require($webfilename);
+db_close();
+$empire=null;
+?>

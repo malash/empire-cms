@@ -1,0 +1,64 @@
+<?php
+define('EmpireCMSAdmin','1');
+require("../class/connect.php");
+require("../class/db_sql.php");
+require("../class/functions.php");
+require("../class/delpath.php");
+require("../class/copypath.php");
+require LoadLang("pub/fun.php");
+require("../class/t_functions.php");
+require("../data/dbcache/class.php");
+require("../data/dbcache/MemberLevel.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$enews=$_POST['enews'];
+if(empty($enews))
+{$enews=$_GET['enews'];}
+//驗證用戶
+$lur=is_login();
+$logininid=$lur['userid'];
+$loginin=$lur['username'];
+$loginrnd=$lur['rnd'];
+$loginlevel=$lur['groupid'];
+$loginadminstyleid=$lur['adminstyleid'];
+hCheckEcmsRHash();
+
+$incftp=0;
+if($public_r['phpmode'])
+{
+	include("../class/ftp.php");
+	$incftp=1;
+}
+//防採集
+if($public_r['opennotcj'])
+{
+	@include("../data/dbcache/notcj.php");
+}
+
+if($enews=="ReListHtml")//刷新信息列表
+{
+	$classid=$_GET['classid'];
+	ReListHtml($classid,0);
+}
+elseif($enews=="AddPostUrlData")//初使化遠程發佈
+{
+	$postdata=$_POST['postdata'];
+	AddPostUrlData($postdata,$logininid,$loginin);
+}
+elseif($enews=="PostUrlData")//遠程發佈
+{
+	$start=$_GET['start'];
+	$rnd=$_GET['rnd'];
+	PostUrlData($start,$rnd,$logininid,$loginin);
+}
+elseif($enews=="ChangeEnewsData")//更新緩存
+{
+	ChangeEnewsData($logininid,$loginin);
+}
+else
+{
+	printerror("ErrorUrl","history.go(-1)");
+}
+db_close();
+$empire=null;
+?>

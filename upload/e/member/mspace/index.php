@@ -1,0 +1,69 @@
+<?php
+require('../../class/connect.php');
+require('../../class/db_sql.php');
+require('../class/user.php');
+$link=db_connect();
+$empire=new mysqlquery();
+$editor=1;
+eCheckCloseMods('member');//關閉模塊
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+//導入文件
+if($enews=='ChangeSpaceStyle'||$enews=='DoSetSpace')
+{
+	include('spacecomfun.php');
+}
+elseif($enews=='AddMemberGbook'||$enews=='ReMemberGbook'||$enews=='DelMemberGbook'||$enews=='DelMemberGbook_All')
+{
+	include('gbookfun.php');
+}
+elseif($enews=='AddMemberFeedback'||$enews=='DelMemberFeedback'||$enews=='DelMemberFeedback_All')
+{
+	include('feedbackfun.php');
+}
+if($enews=="ChangeSpaceStyle")//選擇空間模板
+{
+	ChangeSpaceStyle($_GET);
+}
+elseif($enews=="DoSetSpace")//設置空間信息
+{
+	DoSetSpace($_POST);
+}
+elseif($enews=="AddMemberGbook")//留言
+{
+	AddMemberGbook($_POST);
+}
+elseif($enews=="ReMemberGbook")//回復留言
+{
+	ReMemberGbook($_POST);
+}
+elseif($enews=="DelMemberGbook")//刪除留言
+{
+	DelMemberGbook($_GET);
+}
+elseif($enews=="DelMemberGbook_All")//批量刪除留言
+{
+	DelMemberGbook_All($_POST);
+}
+elseif($enews=="AddMemberFeedback")//提交反饋
+{
+	AddMemberFeedback($_POST);
+}
+elseif($enews=="DelMemberFeedback")//刪除反饋
+{
+	DelMemberFeedback($_GET);
+}
+elseif($enews=="DelMemberFeedback_All")//批量刪除反饋
+{
+	DelMemberFeedback_All($_POST);
+}
+else
+{
+	printerror("ErrorUrl","history.go(-1)",1);
+}
+db_close();
+$empire=null;
+?>

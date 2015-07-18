@@ -1,0 +1,42 @@
+<?php
+exit();
+define('EmpireCMSAdmin','1');
+require("../class/connect.php");
+require("../class/db_sql.php");
+require("../class/functions.php");
+$link=db_connect();
+$empire=new mysqlquery();
+//驗證用戶
+$lur=is_login();
+$logininid=$lur['userid'];
+$loginin=$lur['username'];
+$loginrnd=$lur['rnd'];
+$loginlevel=$lur['groupid'];
+$loginadminstyleid=$lur['adminstyleid'];
+//ehash
+$ecms_hashur=hReturnEcmsHashStrAll();
+//初使化
+$from=ehtmlspecialchars($_GET['from']);
+if($_GET['first']==1)
+{
+	$recheckcjnum=0;
+}
+else
+{
+	$recheckcjnum=$_COOKIE['recheckcjnum'];
+	$recheckcjnum+=1;
+}
+if($recheckcjnum>=$_COOKIE['recjnum'])
+{
+	$enews="ReNewsHtml";
+	//操作日誌
+	        insert_dolog("");
+	echo"<script>alert('所有節點採集完畢,請擊相應的節點進入數據入庫!');</script>";
+}
+else
+{
+	setcookie("recheckcjnum",$recheckcjnum,0,"/","");
+}
+db_close();
+$empire=null;
+?>

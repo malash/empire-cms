@@ -1,0 +1,1 @@
+document.write("<option value=7>|-圖片頻道</option><option value=52 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-明星風采</option><option value=53 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-自然風景</option><option value=54 style=\'background:#99C4E3\'>&nbsp;&nbsp;|-動漫圖片</option>");
