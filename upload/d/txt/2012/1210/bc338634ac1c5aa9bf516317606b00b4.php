@@ -1,0 +1,1 @@
+<?php exit();?><p align=\"left\"><br /><font color=\"#000000\">你，</font></p><p align=\"left\"><font color=\"#000000\">一會看我，</font></p><p align=\"left\"><font color=\"#000000\">一會看雲。</font></p><p align=\"left\"><font color=\"#000000\">我覺得</font></p><p align=\"left\"><font color=\"#000000\">你看我時很遠，</font></p><p align=\"left\"><font color=\"#000000\">你看雲時很近</font></p>

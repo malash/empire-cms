@@ -1,0 +1,126 @@
+<?php
+define('EmpireCMSAdmin','1');
+require("../class/connect.php");
+require("../class/db_sql.php");
+require("../class/functions.php");
+require LoadLang("pub/fun.php");
+require("../class/delpath.php");
+require("../class/copypath.php");
+require("../class/t_functions.php");
+require("../data/dbcache/class.php");
+require("../data/dbcache/MemberLevel.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+//驗證用戶
+$lur=is_login();
+$logininid=$lur['userid'];
+$loginin=$lur['username'];
+$loginrnd=$lur['rnd'];
+$loginlevel=$lur['groupid'];
+$loginadminstyleid=$lur['adminstyleid'];
+hCheckEcmsRHash();
+$incftp=0;
+if($public_r['phpmode'])
+{
+	include("../class/ftp.php");
+	$incftp=1;
+}
+//防採集
+if($public_r['opennotcj'])
+{
+	@include("../data/dbcache/notcj.php");
+}
+require("../class/classfun.php");
+if($enews=="AddZt")//增加專題
+{
+	AddZt($_POST,$logininid,$loginin);
+}
+elseif($enews=="EditZt")//修改專題
+{
+	EditZt($_POST,$logininid,$loginin);
+}
+elseif($enews=="DelZt")//刪除專題
+{
+	$ztid=$_GET['ztid'];
+	DelZt($ztid,$logininid,$loginin);
+}
+elseif($enews=="AddClass")//增加欄目
+{
+	AddClass($_POST,$logininid,$loginin);
+}
+elseif($enews=="EditClass")//修改欄目
+{
+	EditClass($_POST,$logininid,$loginin);
+}
+elseif($enews=="DelClass")//刪除欄目
+{
+	$classid=$_GET['classid'];
+	DelClass($classid,$logininid,$loginin);
+}
+elseif($enews=="ChangeClassIslast")//終極欄目屬性轉換
+{
+	ChangeClassIslast($_POST['reclassid'],$logininid,$loginin);
+}
+elseif($enews=="EditClassOrder")//修改欄目順序
+{
+	$classid=$_POST['classid'];
+	$myorder=$_POST['myorder'];
+	EditClassOrder($classid,$myorder,$logininid,$loginin);
+}
+elseif($enews=="ChangeSonclass")//更新欄目關係
+{
+	$start=$_GET['start'];
+	ChangeSonclass($start,$logininid,$loginin);
+}
+elseif($enews=="DelFcListClass")//刪除欄目緩存文件
+{
+	DelFcListClass();
+}
+elseif($enews=="SetMoreClass")//批量設置欄目
+{
+	SetMoreClass($_POST,$logininid,$loginin);
+}
+elseif($enews=='AddClassF')//增加欄目字段
+{
+	AddClassF($_POST,$logininid,$loginin);
+}
+elseif($enews=='EditClassF')//修改欄目字段
+{
+	EditClassF($_POST,$logininid,$loginin);
+}
+elseif($enews=='DelClassF')//刪除欄目字段
+{
+	DelClassF($_GET,$logininid,$loginin);
+}
+elseif($enews=='EditClassFOrder')//修改欄目字段順序
+{
+	EditClassFOrder($_POST['fid'],$_POST['myorder'],$logininid,$loginin);
+}
+elseif($enews=='AddZtF')//增加專題字段
+{
+	AddZtF($_POST,$logininid,$loginin);
+}
+elseif($enews=='EditZtF')//修改專題字段
+{
+	EditZtF($_POST,$logininid,$loginin);
+}
+elseif($enews=='DelZtF')//刪除專題字段
+{
+	DelZtF($_GET,$logininid,$loginin);
+}
+elseif($enews=='EditZtFOrder')//修改專題字段順序
+{
+	EditZtFOrder($_POST['fid'],$_POST['myorder'],$logininid,$loginin);
+}
+else
+{
+	printerror("ErrorUrl","history.go(-1)");
+}
+db_close();
+$empire=null;
+?>

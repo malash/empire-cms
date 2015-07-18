@@ -1,0 +1,67 @@
+<?php
+require("../class/connect.php");
+require("../class/db_sql.php");
+require("../data/dbcache/class.php");
+require("../member/class/user.php");
+require("../data/dbcache/MemberLevel.php");
+require LoadLang("pub/fun.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+//導入文件
+eCheckCloseMods('shop');//關閉模塊
+include('class/ShopSysFun.php');
+
+if($enews=="ClearBuycar")//清空購物車
+{
+	ClearBuycar();
+}
+elseif($enews=="AddBuycar")//加入購物車
+{
+	$classid=$_GET['classid'];
+	$id=$_GET['id'];
+	$pn=$_GET['pn'];
+	AddBuycar($classid,$id,$pn,$_GET);
+}
+elseif($enews=="EditBuycar")//修改購物車
+{
+	EditBuycar($_POST);
+}
+elseif($enews=="AddDd")//增加定單
+{
+	AddDd($_POST);
+}
+elseif($enews=="ShopDdToPay")//未付款的繼續支付
+{
+	$ddid=$_GET['ddid'];
+	ShopDdToPay($ddid);
+}
+elseif($enews=='DelDd')//取消訂單
+{
+	ShopSys_qDelDd($_GET);
+}
+elseif($enews=="AddAddress")//新增地址
+{
+	ShopSys_AddAddress($_POST);
+}
+elseif($enews=="EditAddress")//修改地址
+{
+	ShopSys_EditAddress($_POST);
+}
+elseif($enews=="DelAddress")//刪除地址
+{
+	ShopSys_DelAddress($_GET);
+}
+elseif($enews=="DefAddress")//默認地址
+{
+	ShopSys_DefAddress($_GET);
+}
+else
+{printerror("ErrorUrl","history.go(-1)",1);}
+db_close();
+$empire=null;
+?>

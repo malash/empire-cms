@@ -1,0 +1,134 @@
+<?php
+define('EmpireCMSAdmin','1');
+require("../../class/connect.php");
+require("../../class/db_sql.php");
+require("../../class/functions.php");
+require "../".LoadLang("pub/fun.php");
+require("class/functions.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$phome=$_GET['phome'];
+if(empty($phome))
+{
+	$phome=$_POST['phome'];
+}
+//驗證用戶
+$lur=is_login();
+$logininid=$lur['userid'];
+$loginin=$lur['username'];
+$loginrnd=$lur['rnd'];
+$loginlevel=$lur['groupid'];
+$loginadminstyleid=$lur['adminstyleid'];
+hCheckEcmsRHash();
+if($phome=="SetDb")//參數設置
+{
+}
+elseif($phome=="DoRep")//修復表
+{
+	$tablename=$_POST['tablename'];
+	$mydbname=$_POST['mydbname'];
+	Ebak_Rep($tablename,$mydbname,$logininid,$loginin);
+}
+//憂化表
+elseif($phome=="DoOpi")
+{
+	$tablename=$_POST['tablename'];
+	$mydbname=$_POST['mydbname'];
+	Ebak_Opi($tablename,$mydbname,$logininid,$loginin);
+}
+//刪除表
+elseif($phome=="DoDrop")
+{
+	$tablename=$_POST['tablename'];
+	$mydbname=$_POST['mydbname'];
+	Ebak_Drop($tablename,$mydbname,$logininid,$loginin);
+}
+//刪除數據庫
+elseif($phome=="DropDb")
+{
+	$mydbname=$_GET['mydbname'];
+	Ebak_DropDb($mydbname,$logininid,$loginin);
+}
+//建立數據庫
+elseif($phome=="CreateDb")
+{
+	$mydbname=$_POST['mydbname'];
+	$mydbchar=$_POST['mydbchar'];
+	Ebak_CreatDb($mydbname,$mydbchar,$logininid,$loginin);
+}
+//清空表
+elseif($phome=="EmptyTable")
+{
+	$tablename=$_POST['tablename'];
+	$mydbname=$_POST['mydbname'];
+	Ebak_EmptyTable($tablename,$mydbname,$logininid,$loginin);
+}
+//初使化備份表
+elseif($phome=="DoEbak")
+{
+	Ebak_DoEbak($_POST,$logininid,$loginin);
+}
+//備份表(按文件)
+elseif($phome=="BakExe")
+{
+	$t=$_GET['t'];
+	$s=$_GET['s'];
+	$p=$_GET['p'];
+	$mypath=$_GET['mypath'];
+	$alltotal=$_GET['alltotal'];
+	$thenof=$_GET['thenof'];
+	$fnum=$_GET['fnum'];
+	$stime=$_GET['stime'];
+	Ebak_BakExe($t,$s,$p,$mypath,$alltotal,$thenof,$fnum,$stime,$logininid,$loginin);
+}
+//備份表(按記錄)
+elseif($phome=="BakExeT")
+{
+	$t=$_GET['t'];
+	$s=$_GET['s'];
+	$p=$_GET['p'];
+	$mypath=$_GET['mypath'];
+	$alltotal=$_GET['alltotal'];
+	$thenof=$_GET['thenof'];
+	$fnum=$_GET['fnum'];
+	$auf=$_GET['auf'];
+	$aufval=$_GET['aufval'];
+	$stime=$_GET['stime'];
+	Ebak_BakExeT($t,$s,$p,$mypath,$alltotal,$thenof,$fnum,$auf,$aufval,$stime,$logininid,$loginin);
+}
+//恢復數據
+elseif($phome=="ReData")
+{
+	$add=$_POST['add'];
+	$mypath=$_POST['mypath'];
+	Ebak_ReData($add,$mypath,$logininid,$loginin);
+}
+//刪除備份目錄
+elseif($phome=="DelBakpath")
+{
+	$path=$_GET['path'];
+	Ebak_DelBakpath($path,$logininid,$loginin);
+}
+//刪除壓縮包
+elseif($phome=="DelZip")
+{
+	$f=$_GET['f'];
+	Ebak_DelZip($f,$logininid,$loginin);
+}
+//壓縮目錄
+elseif($phome=="DoZip")
+{
+	$p=$_GET['p'];
+	Ebak_Dozip($p,$logininid,$loginin);
+}
+//目錄轉向
+elseif($phome=="PathGotoRedata")
+{
+	$mypath=$_GET['mypath'];
+	Ebak_PathGotoRedata($mypath,$logininid,$loginin);
+}
+else
+{
+	printerror("ErrorUrl","history.go(-1)");
+}
+?>

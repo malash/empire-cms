@@ -1,0 +1,1 @@
+document.write("<li><a href=\"/ecms72/news/world/2012-12-10/72.html\" title=\"中國緊急援助物資運抵緬甸仰光(組圖)\">中國緊急援助物資運抵緬甸仰光(組圖</a></li><li><a href=\"/ecms72/news/sports/2012-12-10/71.html\" title=\"奧運聖火成功登頂珠峰\">奧運聖火成功登頂珠峰</a></li><li><a href=\"/ecms72/news/world/2012-12-10/70.html\" title=\"俄羅斯第三任總統梅德韋傑夫宣誓就職\">俄羅斯第三任總統梅德韋傑夫宣誓就</a></li>");

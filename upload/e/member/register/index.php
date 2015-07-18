@@ -1,0 +1,56 @@
+<?php
+require("../../class/connect.php");
+require("../../class/db_sql.php");
+require("../class/user.php");
+require("../class/member_registerfun.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$editor=1;
+eCheckCloseMods('member');//關閉模塊
+//關閉
+if($public_r[register_ok])
+{
+	printerror("CloseRegister","history.go(-1)",1);
+}
+//驗證時間段允許操作
+eCheckTimeCloseDo('reg');
+//驗證IP
+eCheckAccessDoIp('register');
+$tobind=(int)$_GET['tobind'];
+//轉向註冊
+if(!empty($ecms_config['member']['registerurl']))
+{
+	Header("Location:".$ecms_config['member']['registerurl']);
+	exit();
+}
+//已經登陸不能註冊
+if(getcvar('mluserid'))
+{
+	printerror("LoginToRegister","history.go(-1)",1);
+}
+if(!empty($ecms_config['member']['changeregisterurl'])&&!$_GET['groupid'])
+{
+	$changeregisterurl=$ecms_config['member']['changeregisterurl'];
+	if($tobind)
+	{
+		$changeregisterurl.='?tobind=1';
+	}
+	Header("Location:".$changeregisterurl);
+	exit();
+}
+
+$groupid=(int)$_GET['groupid'];
+$groupid=$groupid?$groupid:eReturnMemberDefGroupid();
+CheckMemberGroupCanReg($groupid);
+$formid=GetMemberFormId($groupid);
+if(empty($formid))
+{
+	printerror('ErrorUrl','',1);
+}
+$ecmsfirstpost=1;
+$formfile='../../data/html/memberform'.$formid.'.php';
+//導入模板
+require(ECMS_PATH.'e/template/member/register.php');
+db_close();
+$empire=null;
+?>

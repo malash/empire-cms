@@ -1,0 +1,26 @@
+<?php
+require('../class/connect.php');
+require('../class/db_sql.php');
+require('../member/class/user.php');
+require('../data/dbcache/MemberLevel.php');
+eCheckCloseMods('member');//關閉模塊
+eCheckCloseMods('mconnect');//關閉模塊
+$link=db_connect();
+$empire=new mysqlquery();
+eCheckCloseMemberConnect();//驗證開啟的接口
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+include('memberconnectfun.php');
+if($enews=='DelBind')//解除綁定
+{
+	$id=$_GET['id'];
+	MemberConnect_DelBind($id);
+}
+else
+{printerror("ErrorUrl","history.go(-1)",1);}
+db_close();
+$empire=null;
+?>

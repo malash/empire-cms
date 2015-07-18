@@ -1,0 +1,125 @@
+
+[!--sys.title--]
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#DBEAF5">
+<tr> 
+  <td height="25" bgcolor="#FFFFFF">
+	<?=$tts?"<select name='ttid'><option value='0'>標題分類</option>$tts</select>":""?>
+	<input type=text name=title value="<?=ehtmlspecialchars(stripSlashes($r[title]))?>" size="60"> 
+	<input type="button" name="button" value="圖文" onclick="document.add.title.value=document.add.title.value+'(圖文)';"> 
+  </td>
+</tr>
+<tr> 
+  <td height="25" bgcolor="#FFFFFF">屬性: 
+	<input name="titlefont[b]" type="checkbox" value="b"<?=$titlefontb?>>粗體
+	<input name="titlefont[i]" type="checkbox" value="i"<?=$titlefonti?>>斜體
+	<input name="titlefont[s]" type="checkbox" value="s"<?=$titlefonts?>>刪除線
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;顏色: <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10"><a onclick="foreColor();"><img src="../data/images/color.gif" width="21" height="21" align="absbottom"></a>
+  </td>
+</tr>
+</table>
+[!--sys.qf.exp--]
+<input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
+[!--sys.qf.exp--]
+  <tr bgcolor="#FFFFFF"> 
+    <td height="22" valign="top"><strong>[!--enews.name--]正則：</strong><br>
+      (<input name="textfield" type="text" id="textfield" value="[!--title--]" size="20">)</td>
+    <td><table width="100%" border="0" cellspacing="1" cellpadding="3">
+        <tr> 
+          <td><textarea name="add[zz_title]" cols="60" rows="10" id="textarea"><?=ehtmlspecialchars(stripSlashes($r[zz_title]))?></textarea></td>
+        </tr>
+        <tr> 
+          <td><input name="add[z_title]" type="text" id="add[z_title]" value="<?=stripSlashes($r[z_title])?>">
+            (如填寫這裡，將為字段的值)</td>
+        </tr>
+      </table></td>
+  </tr>
+[!--sys.title--]
+
+---------------------------------------------
+
+[!--sys.special.field--]
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#DBEAF5">
+  <tr>
+    <td height="25" bgcolor="#FFFFFF">信息屬性: 
+      <input name="checked" type="checkbox" value="1"<?=$r[checked]?' checked':''?>>
+      審核 &nbsp;&nbsp; 推薦 
+      <select name="isgood" id="isgood">
+        <option value="0">不推薦</option>
+	<?=$ftnr['igname']?>
+      </select>
+      &nbsp;&nbsp; 頭條 
+      <select name="firsttitle" id="firsttitle">
+        <option value="0">非頭條</option>
+	<?=$ftnr['ftname']?>
+      </select></td>
+  </tr>
+  <tr> 
+    <td height="25" bgcolor="#FFFFFF">關鍵字&nbsp;&nbsp;&nbsp;: 
+      <input name="keyboard" type="text" size="52" value="<?=stripSlashes($r[keyboard])?>">
+      <font color="#666666">(多個請用&quot;,&quot;隔開)</font></td>
+  </tr>
+  <tr> 
+    <td height="25" bgcolor="#FFFFFF">外部鏈接: 
+      <input name="titleurl" type="text" value="<?=stripSlashes($r[titleurl])?>" size="52">
+      <font color="#666666">(填寫後信息連接地址將為此鏈接)</font></td>
+  </tr>
+</table>
+[!--sys.qf.exp--]
+<input name="keyboard" type="text" size=42 value="<?=stripSlashes($r[keyboard])?>">
+<font color="#666666">(多個請用&quot;,&quot;隔開)</font>
+[!--sys.qf.exp--]
+
+[!--sys.special.field--]
+
+---------------------------------------------
+
+[!--sys.titlepic--]
+<input name="titlepic" type="text" id="titlepic" value="<?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($r[titlepic]))?>" size="45">
+<a onclick="window.open('ecmseditor/FileMain.php?type=1&classid=<?=$classid?>&infoid=<?=$id?>&filepass=<?=$filepass?>&sinfo=1&doing=1&field=titlepic<?=$ecms_hashur[ehref]?>','','width=700,height=550,scrollbars=yes');" title="選擇已上傳的圖片"><img src="../data/images/changeimg.gif" border="0" align="absbottom"></a> 
+[!--sys.qf.exp--]
+<input type="file" name="titlepicfile" size="45">
+[!--sys.qf.exp--]
+  <tr bgcolor="#FFFFFF"> 
+    <td height="22" valign="top"><strong>[!--enews.name--]正則：</strong><br>
+      ( 
+      <input name="textfield" type="text" id="textfield" value="[!--titlepic--]" size="20">
+      )</td>
+    <td><table width="100%" border="0" cellspacing="1" cellpadding="3">
+    <tr>
+      <td>附件前綴 
+        <input name="add[qz_titlepic]" type="text" id="add[qz_titlepic]" value="<?=stripSlashes($r[qz_titlepic])?>"> 
+        <input name="add[save_titlepic]" type="checkbox" id="add[save_titlepic]" value=" checked"<?=$r[save_titlepic]?>>
+        遠程保存 </td>
+    </tr>
+    <tr> 
+      <td><textarea name="add[zz_titlepic]" cols="60" rows="10" id="add[zz_titlepic]"><?=ehtmlspecialchars(stripSlashes($r[zz_titlepic]))?></textarea></td>
+    </tr>
+    <tr> 
+      <td><input name="add[z_titlepic]" type="text" id="titlepic5" value="<?=stripSlashes($r[z_titlepic])?>">
+        (如填寫這裡，這就是字段的值)</td>
+    </tr>
+  </table></td>
+  </tr>
+[!--sys.titlepic--]
+
+---------------------------------------------
+
+[!--sys.newstime--]
+<input name="newstime" type="text" value="<?=$r[newstime]?>"><input type=button name=button value="設為當前時間" onclick="document.add.newstime.value='<?=$todaytime?>'">
+[!--sys.qf.exp--]
+
+[!--sys.qf.exp--]
+  <tr bgcolor="#FFFFFF"> 
+    <td height="22" valign="top"><strong>[!--enews.name--]正則：</strong><br>
+      (<input name="textfield" type="text" id="textfield" value="[!--newstime--]" size="20">)</td>
+    <td><table width="100%" border="0" cellspacing="1" cellpadding="3">
+        <tr> 
+          <td><textarea name="add[zz_newstime]" cols="60" rows="10" id="textarea"><?=ehtmlspecialchars(stripSlashes($r[zz_newstime]))?></textarea></td>
+        </tr>
+        <tr> 
+          <td><input name="add[z_newstime]" type="text" id="add[z_newstime]" value="<?=stripSlashes($r[z_newstime])?>">
+            (如填寫這裡，將為字段的值)</td>
+        </tr>
+      </table></td>
+  </tr>
+[!--sys.newstime--]

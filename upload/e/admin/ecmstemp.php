@@ -1,0 +1,133 @@
+<?php
+define('EmpireCMSAdmin','1');
+require("../class/connect.php");
+require("../class/db_sql.php");
+require("../class/functions.php");
+require LoadLang("pub/fun.php");
+require("../class/t_functions.php");
+require("../data/dbcache/class.php");
+require("../data/dbcache/MemberLevel.php");
+$link=db_connect();
+$empire=new mysqlquery();
+$enews=$_POST['enews'];
+if(empty($enews))
+{
+	$enews=$_GET['enews'];
+}
+//驗證用戶
+$lur=is_login();
+$logininid=$lur['userid'];
+$loginin=$lur['username'];
+$loginrnd=$lur['rnd'];
+$loginlevel=$lur['groupid'];
+$loginadminstyleid=$lur['adminstyleid'];
+hCheckEcmsRHash();
+$incftp=0;
+if($public_r['phpmode'])
+{
+	include("../class/ftp.php");
+	$incftp=1;
+}
+//防採集
+if($public_r['opennotcj'])
+{
+	@include("../data/dbcache/notcj.php");
+}
+require("../class/tempfun.php");
+if($enews=="EditGbooktemp")//修改留言板模板
+{
+	$temptext=$_POST[temptext];
+	EditGbooktemp($temptext,$logininid,$loginin);
+}
+elseif($enews=="EditCptemp")//修改控制面板模板
+{
+	$temptext=$_POST[temptext];
+	EditCptemp($temptext,$logininid,$loginin);
+}
+elseif($enews=="EditLoginIframe")//修改登陸狀態模板
+{
+	$temptext=$_POST[temptext];
+	EditLoginIframe($temptext,$logininid,$loginin);
+}
+elseif($enews=="EditLoginJstemp")//修改JS調用登陸狀態模板
+{
+	$temptext=$_POST[temptext];
+	EditLoginJstemp($temptext,$logininid,$loginin);
+}
+elseif($enews=="EditSchallTemp")//修改全站搜索模板
+{
+	$temptext=$_POST[temptext];
+	EditSchallTemp($temptext,$_POST['schallsubnum'],$_POST['schalldate'],$logininid,$loginin);
+}
+elseif($enews=="AddBq")//增加標籤
+{
+	$add=$_POST['add'];
+	$bqsay=$_POST['bqsay'];
+	AddBq($add,$bqsay,$logininid,$loginin);
+}
+elseif($enews=="EditBq")//修改標籤
+{
+	$add=$_POST['add'];
+	$bqsay=$_POST['bqsay'];
+	EditBq($add,$bqsay,$logininid,$loginin);
+}
+elseif($enews=="DelBq")//刪除標籤
+{
+	$bqid=$_GET['bqid'];
+	$cid=$_GET['cid'];
+	DelBq($bqid,$cid,$logininid,$loginin);
+}
+elseif($enews=="EditSearchTemp")//修改搜索表單模板
+{
+	$tempname=$_POST['tempname'];
+	$temptext=$_POST['temptext'];
+	EditSearchTemp($tempname,$temptext,$logininid,$loginin);
+}
+elseif($enews=="EditOtherLinkTemp")//修改相關鏈接模板
+{
+	$tempname=$_POST['tempname'];
+	$temptext=$_POST['temptext'];
+	EditOtherLinkTemp($tempname,$temptext,$logininid,$loginin);
+}
+elseif($enews=="EditOtherPubTemp")//修改其它公共模板
+{
+	$tempname=$_POST['tempname'];
+	$temptext=$_POST['temptext'];
+	EditOtherPubTemp($tempname,$temptext,$logininid,$loginin);
+}
+elseif($enews=="EditPublicTemp")//修改首頁模板
+{
+	$temptext=$_POST['temptext'];
+	EditIndextemp($temptext,$logininid,$loginin);
+}
+elseif($enews=="LoadTempInClass")//批量導入欄目模板
+{
+	$path=$_GET['path'];
+	$start=$_GET['start'];
+	LoadTempInClass($path,$start,$logininid,$loginin);
+}
+elseif($enews=="ChangeClassListtemp")//批量更換欄目列表模板
+{
+	$classid=$_POST['classid'];
+	$listtempid=$_POST['listtempid'];
+	ChangeClassListtemp($classid,$listtempid,$logininid,$loginin);
+}
+elseif($enews=="LoadOutBq")//導出標籤
+{
+	LoadOutBq($_POST,$logininid,$loginin);
+}
+elseif($enews=="ReEBakTemp")//還原模板備份
+{
+	ReEBakTemp($_GET,$logininid,$loginin);
+}
+elseif($enews=="PreviewIndexpage")//預覽首頁方案
+{
+	PreviewIndexpage($_GET['tempid'],$logininid,$loginin);
+}
+else
+{
+	printerror("ErrorUrl","history.go(-1)");
+}
+db_close();
+$empire=null;
+?>
