@@ -1,0 +1,49 @@
+diff --git a/upload/e/install/index.php b/upload/e/install/index.php
+index a79e014..9c782c5 100644
+--- a/upload/e/install/index.php
++++ b/upload/e/install/index.php
+@@ -77,7 +77,6 @@ elseif($enews=="moddata"&&$ok)
+ 	InstallModData($_GET);
+ }
+ 
+-$shorttag=ini_get('short_open_tag');
+ ?>
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+ <html>
+@@ -89,36 +88,6 @@ $shorttag=ini_get('short_open_tag');
+ </head>
+ 
+ <body bgcolor="C9F1FF" leftmargin="0" topmargin="0">
+-<?php
+-if(!$shorttag)
+-{
+-?>
+-<br>
+-<br><br>
+-<table width="500" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
+-  <tr> 
+-    <td height="25" class="header"><div align="center"><strong><font color="#FFFFFF">错误提示</font></strong></div></td>
+-  </tr>
+-  <tr> 
+-    <td height="25" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="1" cellpadding="3">
+-        <tr>
+-          <td height="25">您的PHP配置文件php.ini配置有问题，请按下面操作即可解决：</td>
+-        </tr>
+-        <tr>
+-          <td height="25">1、修改php.ini，将：short_open_tag 设为 On</td>
+-        </tr>
+-        <tr>
+-          <td height="25">2、修改后重启apache/iis方能生效。</td>
+-        </tr>
+-      </table>
+-    </td>
+-  </tr>
+-</table>
+-<?php
+-	echo"</body></html>";
+-	exit();
+-}
+-?>
+ <table width="776" height="100%" border="0" align="center" cellpadding="6" cellspacing="0" bgcolor="#FFFFFF">
+   <tr> 
+     <td height="56" colspan="2" background="images/topbg.gif"> 
