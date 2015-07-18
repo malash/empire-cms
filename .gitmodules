@@ -1,0 +1,3 @@
+[submodule "submodule/empire-cms-sh"]
+	path = submodule/empire-cms-sh
+	url = https://github.com/malash/empire-cms-sh.git
